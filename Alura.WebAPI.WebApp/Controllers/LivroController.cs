@@ -59,6 +59,33 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             return View(model.ToModel());
         }
 
+        public Livro RecuperaLivro(int id)
+        {
+            return _repo.Find(id);
+        }
+
+        public ActionResult<LivroUpload> DetalhesJson(int id)
+        {
+            var model = RecuperaLivro(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return model.ToModel();
+        }
+
+        [HttpGet]
+        public IActionResult DetalhesSemHtml(int id)
+        {
+            var model = RecuperaLivro(id);
+            if(model == null)
+            {
+                return NotFound();
+            }
+
+            return Json(model.ToModel());
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Detalhes(LivroUpload model)
@@ -83,7 +110,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Remover(int id)
         {
-            var model = _repo.Find(id);
+            var model = RecuperaLivro(id);
             if (model == null)
             {
                 return NotFound();
